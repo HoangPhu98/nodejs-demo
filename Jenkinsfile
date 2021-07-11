@@ -51,14 +51,6 @@ pipeline {
                 echo "staging branch"
             }
         }
-        stage('Deploy Staging') {
-            when {
-                branch 'staging'
-            }
-            steps {
-                echo "staging branch"
-            }
-        }
         stage('Deploy Prod') {
             when { tag "release-*" }
             steps {
