@@ -3,12 +3,12 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                echo Build
+                echo 'Build'
             }
         }
         stage('test') {
             steps {
-                echo Test
+                echo 'Test'
             }
         }
         stage('For feature-* branch') {
