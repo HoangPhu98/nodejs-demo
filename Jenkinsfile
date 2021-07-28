@@ -1,9 +1,11 @@
 pipeline {
     agent any
+    tools {nodejs "nodejs"}
     stages {
         stage('build') {
             steps {
                 echo 'Build'
+		sh 'npm install'
             }
         }
         stage('test') {
@@ -40,7 +42,12 @@ pipeline {
                 branch 'dev'
             }
             steps {
-                echo "dev branch"
+                sh '''#!/usr/bin/env bash
+                docker login -u ${DOCKER_REGISTRY_USERNAME} -p ${DOCKER_REGISTRY_PASSWORD}
+                docker build --tag "${REGISTRY_NAME}/nodejs-demo-mb:${BUILD_NUMBER}" .
+                docker push "${REGISTRY_NAME}/nodejs-demo-mb:${BUILD_NUMBER}"
+                docker run --rm "${REGISTRY_NAME}/nodejs-demo-mb:${BUILD_NUMBER}"
+                '''
             }
         }
         stage('Deploy Staging') {
