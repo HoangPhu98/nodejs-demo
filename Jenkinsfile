@@ -44,7 +44,7 @@ pipeline {
                 docker login -u ${DOCKER_REGISTRY_USERNAME} -p ${DOCKER_REGISTRY_PASSWORD}
                 docker build --tag "${REGISTRY_NAME}/nodejs-demo-mb:${BUILD_NUMBER}" .
                 docker push "${REGISTRY_NAME}/nodejs-demo-mb:${BUILD_NUMBER}"
-                docker run --rm -p 3000:3000 "${REGISTRY_NAME}/nodejs-demo-mb:${BUILD_NUMBER}" && exit 0
+                docker run --rm -p 3000:3000 -d --name nodejs-demo "${REGISTRY_NAME}/nodejs-demo-mb:${BUILD_NUMBER}"
                 '''
             }
         }
