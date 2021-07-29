@@ -1,6 +1,12 @@
 pipeline {
     agent any
     tools {nodejs "nodejs"}
+    
+    environment {
+        REGISTRY_NAME               = credentials('REGISTRY_NAME')
+        DOCKER_REGISTRY_USERNAME    = credentials('DOCKER_REGISTRY_USERNAME')
+        DOCKER_REGISTRY_PASSWORD    = credentials('DOCKER_REGISTRY_PASSWORD')
+    }
     stages {
         stage('build') {
             steps {
@@ -19,14 +25,6 @@ pipeline {
             }
             steps {
                 echo "Feature branch"
-            }
-        }
-        stage('For fix-* branch') {
-            when {
-                branch 'fix-*'
-            }
-            steps {
-                echo "Fix branch"
             }
         }
         stage('For MR-* branch') {
@@ -48,20 +46,6 @@ pipeline {
                 docker push "${REGISTRY_NAME}/nodejs-demo-mb:${BUILD_NUMBER}"
                 docker run --rm "${REGISTRY_NAME}/nodejs-demo-mb:${BUILD_NUMBER}"
                 '''
-            }
-        }
-        stage('Deploy Staging') {
-            when {
-                branch 'staging'
-            }
-            steps {
-                echo "staging branch"
-            }
-        }
-        stage('Deploy Prod') {
-            when { tag "release-*" }
-            steps {
-                echo 'Deploying only because this commit is tagged...'
             }
         }
     }
